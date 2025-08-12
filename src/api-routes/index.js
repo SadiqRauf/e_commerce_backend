@@ -252,19 +252,288 @@
  *         in: path
  *         required: true
  *         schema:
- *           type: integer
+ *           type: string
+ *           format: uuid
+ *         description: UUID of the user to delete
  *     responses:
  *       200:
- *         description: User deleted
+ *         description: User deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User deleted successfully
+ *       404:
+ *         description: User not found
+ *       400:
+ *         description: Bad request
  */
 
 
+/**
+ * @swagger
+ * tags:
+ *   name: Category
+ *   description: Category management endpoints
+ */
+
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ *   schemas:
+ *     Category:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *           example: "550e8400-e29b-41d4-a716-446655440000"
+ *         title:
+ *           type: string
+ *           example: "Electronics"
+ *         description:
+ *           type: string
+ *           example: "All kinds of electronic gadgets."
+ *         image:
+ *           type: string
+ *           example: "https://example.com/image.jpg"
+ *         is_deleted:
+ *           type: boolean
+ *           example: false
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2025-08-11T10:00:00.000Z"
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           example: "2025-08-11T10:00:00.000Z"
+ *     CategoryInput:
+ *       type: object
+ *       required:
+ *         - title
+ *       properties:
+ *         title:
+ *           type: string
+ *           example: "Electronics"
+ *         description:
+ *           type: string
+ *           example: "All kinds of electronic gadgets."
+ *         image:
+ *           type: string
+ *           example: "https://example.com/image.jpg"
+ */
+
+/**
+ * @swagger
+ * /categories:
+ *   post:
+ *     summary: Create a new category
+ *     tags: [Category]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CategoryInput'
+ *     responses:
+ *       201:
+ *         description: Category created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Category'
+ *
+ *   get:
+ *     summary: Get all categories
+ *     tags: [Category]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: List of categories
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Category'
+ */
+
+/**
+ * @swagger
+ * /categories/{id}:
+ *   get:
+ *     summary: Get a category by ID
+ *     tags: [Category]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Category ID
+ *     responses:
+ *       200:
+ *         description: Category retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Category'
+ *       404:
+ *         description: Category not found
+ *       400:
+ *         description: Invalid ID format
+ *
+ *   put:
+ *     summary: Update category by ID
+ *     tags: [Category]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CategoryInput'
+ *     responses:
+ *       200:
+ *         description: Successfully updated category
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Category'
+ *       404:
+ *         description: Category not found
+ *       400:
+ *         description: Invalid request
+ *
+ *   delete:
+ *     summary: Delete category by ID
+ *     tags: [Category]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       204:
+ *         description: Category deleted successfully
+ *       404:
+ *         description: Category not found
+ *       400:
+ *         description: Invalid request
+ */
+
+
+/**
+ * @swagger
+ * tags:
+ *   name: Products
+ *   description: Product management APIs
+ */
+
+/**
+ * @swagger
+ * /products:
+ *   get:
+ *     summary: Get all products
+ *     tags: [Products]
+ *     responses:
+ *       200:
+ *         description: List of products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   title:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *                   price:
+ *                     type: number
+ *                   quantity:
+ *                     type: integer
+ *                   color:
+ *                     type: string
+ *                   image:
+ *                     type: string
+ *                   category_id:
+ *                     type: string
+ */
+
+/**
+ * @swagger
+ * /products:
+ *   post:
+ *     summary: Create a new product
+ *     tags: [Products]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - price
+ *               - category_id
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               quantity:
+ *                 type: integer
+ *               color:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *               category_id:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Product created successfully
+ */
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
 
 const authController = require('../controllers/authController');
 const authMiddleware = require('../middleware/authMiddleware')
+const categoryController = require('../modules/category/index')
+const productController = require('../modules/product/index')
 
 // Authentication routes
 router.post('/register', authController.register);
@@ -282,5 +551,16 @@ router.put('/user/:id', authMiddleware, userController.updateUser);
 router.delete('/user/:id', authMiddleware, userController.deleteUser);
 
 
+// Categry
+
+router.post('/categories', authMiddleware, categoryController.createCategory)
+router.get('/categories', authMiddleware, categoryController.getCategory)
+router.get('/categories/:id', authMiddleware, categoryController.getCategoryById)
+router.put('/categories/:id', authMiddleware, categoryController.updateCategory)
+router.delete('/categories/:id', authMiddleware, categoryController.deleteCategory)
+
+// Products
+router.post('/products', authMiddleware, productController.createProduct)
+router.get('/products', authMiddleware, productController.getProducts)
 
 module.exports = router;

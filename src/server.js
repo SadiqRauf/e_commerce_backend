@@ -20,7 +20,12 @@ app.use('/api', routes, (req, res, next) => {
     res.status(404).json({ message: 'Not Found' });
 })
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs, {
+    swaggerOptions: {
+        persistAuthorization: true
+    }
+}));
 
 async function startServer() {
     try {

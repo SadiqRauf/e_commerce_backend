@@ -48,7 +48,7 @@ exports.deleteUser = async (req, res) => {
         if (!user) return res.status(404).json({ error: 'User not found' });
 
         await user.destroy();
-        res.status(204).send({ message: 'User deleted successfully' });
+        res.status(200).json({ message: 'Category deleted successfully' });
 
     } catch (error) {
         res.status(400).json({ error: error.message });
