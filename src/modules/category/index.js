@@ -1,4 +1,5 @@
 const Category = require('../../models/Category');
+const Product = require('../../models/Product');
 const { v4: uuidv4 } = require('uuid');
 
 exports.createCategory = async (req, res) => {
@@ -21,7 +22,24 @@ exports.getCategory = async (req, res) => {
 
 exports.getCategoryById = async (req, res) => {
     try {
-        const category = await Category.findByPk(req.params.id);
+
+        const category = await Category.findByPk(req.params.id, {
+            include: [
+                {
+                    model: Product,
+                    attributes: [
+                        'id',
+                        'title',
+                        'description',
+                        'price',
+                        'quantity',
+                        'color',
+                        'image'
+                    ]
+                }
+            ]
+        });
+
         if (!category) return res.status(404).json({ error: 'Category not found' });
         res.json(category);
     } catch (error) {

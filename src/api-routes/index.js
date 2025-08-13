@@ -526,6 +526,110 @@
  *       201:
  *         description: Product created successfully
  */
+
+
+/**
+ * @swagger
+ * /products/{id}:
+ *   get:
+ *     summary: Get a product by ID
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Product ID
+ *     responses:
+ *       200:
+ *         description: Product data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: string
+ *                 title:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 price:
+ *                   type: number
+ *                 quantity:
+ *                   type: integer
+ *                 color:
+ *                   type: string
+ *                 image:
+ *                   type: string
+ *                 category_id:
+ *                   type: string
+ *       404:
+ *         description: Product not found
+ */
+
+/**
+ * @swagger
+ * /products/{id}:
+ *   put:
+ *     summary: Update a product by ID
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Product ID
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               quantity:
+ *                 type: integer
+ *               color:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *               category_id:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Updated product
+ *       404:
+ *         description: Product not found
+ */
+
+/**
+ * @swagger
+ * /products/{id}:
+ *   delete:
+ *     summary: Delete a product by ID
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Product ID
+ *     responses:
+ *       200:
+ *         description: Product deleted successfully
+ *       404:
+ *         description: Product not found
+ */
+
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
@@ -562,5 +666,8 @@ router.delete('/categories/:id', authMiddleware, categoryController.deleteCatego
 // Products
 router.post('/products', authMiddleware, productController.createProduct)
 router.get('/products', authMiddleware, productController.getProducts)
+router.get('/products/:id', productController.getProductById);
+router.put('/products/:id', productController.updateProduct);
+router.delete('/products/:id', productController.deleteCategory);
 
 module.exports = router;

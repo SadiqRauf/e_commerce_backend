@@ -16,7 +16,7 @@ const Product = sequelize.define('Product', {
     timestamps: true
 });
 
-Product.belongsTo(Category, { foreignKey: 'category_id' });  // Establishing a foreign key relationship 
-Category.hasMany(Product, { foreignKey: 'category_id' });   // Establishing a one-to-many relationship
+Product.belongsTo(Category, { foreignKey: 'category_id' });
+Category.hasMany(Product, { foreignKey: 'category_id' });
 
 module.exports = Product;
