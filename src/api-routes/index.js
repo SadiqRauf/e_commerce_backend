@@ -630,6 +630,205 @@
  *         description: Product not found
  */
 
+/**
+ * @swagger
+ * tags:
+ *   name: Orders
+ *   description: Order management APIs
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Order:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           format: uuid
+ *           example: "550e8400-e29b-41d4-a716-446655440000"
+ *         status:
+ *           type: string
+ *           enum: [pending, completed, cancelled]
+ *           example: pending
+ *         total_amount:
+ *           type: number
+ *           format: decimal
+ *           example: 250.50
+ *         user_id:
+ *           type: string
+ *           format: uuid
+ *           example: "550e8400-e29b-41d4-a716-446655440000"
+ *         quantity:
+ *           type: integer
+ *           example: 12
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ */
+
+/**
+ * @swagger
+ * /orders:
+ *   get:
+ *     summary: Get all orders
+ *     tags: [Orders]
+ *     responses:
+ *       200:
+ *         description: List of orders
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Order'
+ */
+
+/**
+ * @swagger
+ * /orders/{id}:
+ *   get:
+ *     summary: Get an order by ID
+ *     tags: [Orders]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *         description: Order ID
+ *     responses:
+ *       200:
+ *         description: Order details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Order'
+ *       404:
+ *         description: Order not found
+ */
+
+/**
+ * @swagger
+ * /order:
+ *   post:
+ *     summary: Create a new order
+ *     tags: [Orders]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [pending, completed, cancelled]
+ *               total_amount:
+ *                 type: number
+ *                 example: 250.50
+ *               user_id:
+ *                 type: string
+ *                 format: uuid
+ *                 example: "USER-UUID-HERE"
+ *               quantity:
+ *                 type: number
+ *                 example: 12
+ *               selected_products:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     product_id:
+ *                       type: string
+ *                       format: uuid
+ *                     name:
+ *                       type: string
+ *                     price:
+ *                       type: number
+ *                     qty:
+ *                       type: number
+ *                 example:
+ *                   - product_id: "PROD-UUID-1"
+ *                     name: "Product A"
+ *                     price: 50
+ *                     qty: 2
+ *                   - product_id: "PROD-UUID-2"
+ *                     name: "Product B"
+ *                     price: 150
+ *                     qty: 1
+ */
+
+
+/**
+ * @swagger
+ * /orders/{id}:
+ *   put:
+ *     summary: Update an order
+ *     tags: [Orders]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [pending, completed, cancelled]
+ *                 example: completed
+ *               total_amount:
+ *                 type: number
+ *                 example: 300.00
+ *               quantity:
+ *                 type: integer
+ *                 example: 15
+ *     responses:
+ *       200:
+ *         description: Order updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Order'
+ *       404:
+ *         description: Order not found
+ */
+
+/**
+ * @swagger
+ * /orders/{id}:
+ *   delete:
+ *     summary: Delete an order
+ *     tags: [Orders]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: uuid
+ *     responses:
+ *       200:
+ *         description: Order deleted successfully
+ *       404:
+ *         description: Order not found
+ */
+
+
+
+
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
@@ -638,6 +837,7 @@ const authController = require('../controllers/authController');
 const authMiddleware = require('../middleware/authMiddleware')
 const categoryController = require('../modules/category/index')
 const productController = require('../modules/product/index')
+const orderController = require('../modules/order/index')
 
 // Authentication routes
 router.post('/register', authController.register);
@@ -669,5 +869,13 @@ router.get('/products', authMiddleware, productController.getProducts)
 router.get('/products/:id', productController.getProductById);
 router.put('/products/:id', productController.updateProduct);
 router.delete('/products/:id', productController.deleteCategory);
+
+
+// Orders
+router.post('order/', orderController.createOrder);
+router.get('orders/', orderController.getOrders);
+router.get('order/:id', orderController.getOrderById);
+router.put('order/:id', orderController.updateOrder);
+router.delete('order/:id', orderController.deleteOrder);
 
 module.exports = router;
