@@ -855,7 +855,7 @@ router.put('/user/:id', authMiddleware, userController.updateUser);
 router.delete('/user/:id', authMiddleware, userController.deleteUser);
 
 
-// Categry
+// Category
 
 router.post('/categories', authMiddleware, categoryController.createCategory)
 router.get('/categories', authMiddleware, categoryController.getCategory)
