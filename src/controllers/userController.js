@@ -10,6 +10,7 @@ exports.createUser = async (req, res) => {
     }
 };
 
+//
 exports.getUser = async (req, res) => {
     try {
         const user = await User.findAll();
